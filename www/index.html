@@ -1,0 +1,106 @@
+<html ng-app="DCUFMApp">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+
+    <title>DCUFM - Ireland's Best Student Radio</title>
+
+    <link href="css/ionic.min.css" rel="stylesheet">
+    <link href="css/app.css" rel="stylesheet">
+
+    <script src="cordova.js"></script>
+    <script src="js/ionic.bundle.min.js"></script>
+
+    <script src="js/app.js"></script>
+</head>
+<body>
+    <ion-nav-bar animation="nav-title-slide-ios7"
+                 type="bar-light"
+                 back-button-type="button-icon"
+                 back-button-icon="ion-arrow-left-c"></ion-nav-bar>
+    <ion-nav-view animation="slide-left-right"></ion-nav-view>
+
+    <script id="home.html" type="text/ng-template">
+        <ion-view title="'Home'">
+            <ion-content has-header="true" has-bouncing="false" padding="true">
+                <a class="item" href="#/schedule">schedule</a>
+                <a class="item" href="#/listen">listen</a>
+                <a class="item" href="#/message">message</a>
+                <a class="item" href="#/about">about</a>
+            </ion-content>
+        </ion-view>
+    </script>
+
+    <script id="schedule.html" type="text/ng-template">
+        <ion-view title="'Schedule'">
+            <ion-content has-header="true" has-bouncing="false" padding="true">
+                <div class="list">
+                     <a class="item" href="#/schedule/{{day}}" ng-repeat="day in days">
+                        {{day}}
+                    </a>
+                </div>
+            </ion-content>
+        </ion-view>
+    </script>
+
+    <script id="scheduleday.html" type="text/ng-template">
+        <ion-view title="day">
+            <ion-content has-header="true" has-bouncing="false" padding="true">
+                <div class="list">
+                    <div class="item item-text-wrap" ng-repeat="show in schedule">
+                        <div class="row row-center">
+                            <div class="col-33" ng-bind-html="show.startClock"></div>
+                            <div class="col" ng-bind-html="show.showName"></div>
+                        </div>
+                    </div>
+                </div>
+            </ion-content>
+        </ion-view>
+    </script>
+
+    <script id="message.html" type="text/ng-template">
+        <ion-view title="'Message In'">
+            <ion-content has-header="true" padding="true" has-bouncing="false">
+                <div class="list list-inset">
+                  <label class="item item-input">
+                    <textarea placeholder="Enter your message here"></textarea>
+                  </label>
+                </div>
+                <button class="button button-block button-balanced" ng-click="sendMessage()">
+                  Submit
+                </button>
+            </ion-content>
+        </ion-view>
+    </script>
+
+    <script id="about.html" type="text/ng-template">
+        <ion-view title="'About Us'">
+            <ion-content has-header="true" has-bouncing="false">
+                <p>DCUfm is Dublin City University’s award-winning home-grown radio station, staffed by over 120 volunteers from across DCU’s faculties. Our philosophy is simple: we want to put out the best, fun-loving programmes possible, and give students a voice.
+
+                    We’re on the air 24 hours a day, with live and original programmes from 9am to 11pm on weekdays. DCUfm is your place for the best in student-orientated arts, news, sport, and music radio. Whatever you’re into, we’ve something for you.</p>
+                <p>
+                    Many former staff members are moving up the ranks within local and national broadcasters – indeed, many of our current members now have jobs in the industry thanks to the experience they’ve gained here.
+                </p>
+            </ion-content>
+        </ion-view>
+    </script>
+
+    <script id="listen.html" type="text/ng-template">
+        <ion-view title="'Listen'">
+            <div class="bar bar-subheader bar-dark">
+                <h2 class="title title-left">{{currentShow.showName}}</h2>
+            </div>
+            <ion-content has-header="true" has-subheader="true" scroll="false" has-footer="true" padding="false" has-bouncing="false">
+                <div class="center show-image">
+                    <img id="show-image" ng-src="{{currentShow.imageURL}}">
+                </div>
+            </ion-content>
+            <ion-footer-bar type="bar-dark">
+                <i id="player-status-icon" class="icon" ng-click="changeState()" ng-class="{'ion-play': !isPlaying, 'ion-pause': isPlaying}"></i>
+            </ion-footer-bar>
+        </ion-view>
+    </script>
+</body>
+</html>
