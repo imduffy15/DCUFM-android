@@ -1,4 +1,4 @@
-storage = window.localStorage;
+var storage = window.localStorage;
 
 angular.module('DCUFMApp', ['ionic'])
     .config(function ($stateProvider, $urlRouterProvider) {
@@ -39,30 +39,63 @@ angular.module('DCUFMApp', ['ionic'])
         $urlRouterProvider.otherwise("/home");
 
     })
+    .run(function($http, $rootScope) {
+        // Place schedule data into localstorage.
+        var cached = storage.getItem('schedule-cached');
+        var api = 'feed.json';
 
-    .controller('HomeCtrl', function ($scope, $http) {
-
-        ionic.Platform.ready(function() {
-        });
-
-        var schedule = cached = storage.getItem('schedule-cached');
-        var api = 'feed.json'
-
-        if((Math.round(new Date().getTime() / 1000) - cached) > 86400) {
+        // Only update if older than 86400 seconds.
+        if ((Math.round(new Date().getTime() / 1000) - cached) > 86400) {
             $http({
                 method: 'GET',
                 url: api,
                 data: 'crud-action=read',
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'}
             })
-            .success(function(data) {
-                    storage.setItem('schedule', JSON.stringify(data));
-                    storage.setItem('schedule-cached', (Math.round(new Date().getTime() / 1000)));
+            .success(function (data) {
+                storage.setItem('schedule', JSON.stringify(data));
+                storage.setItem('schedule-cached', (Math.round(new Date().getTime() / 1000)));
             })
-            .error(function(data) {
-                    console.log('error' + data);
+            .error(function (data) {
+                console.log('error' + data);
             })
         }
+
+        var streamUrl = "http://dcufm.redbrick.dcu.ie/stream128.mp3";
+        $rootScope.audio = new Audio(streamUrl);
+        $rootScope.ready = /(iPad|iPhone|iPod)/g.test(navigator.userAgent);
+
+        $rootScope.audio.addEventListener('play', function () {
+            console.log('playing')
+        }, false);
+        $rootScope.audio.addEventListener('pause', function () {
+            console.log('paused')
+        }, false);
+        $rootScope.audio.addEventListener('error', function () {
+            console.log('error');
+        }, false);
+        $rootScope.audio.addEventListener('waiting', function () {
+            console.log('waiting');
+        }, false);
+        $rootScope.audio.addEventListener('canplay', function () {
+            $rootScope.ready = true;
+        }, false);
+
+        $rootScope.audio.addEventListener('canplaythrough', function () {
+            $rootScope.ready = true;
+        }, false);
+
+        $rootScope.audio.addEventListener('ended', function () {
+            console.log('stream-ended');
+        }, false);
+
+        $rootScope.audio.addEventListener('touchstart', function () {
+            $rootScope.audio.play();
+        }, false);
+
+    })
+    .controller('HomeCtrl', function () {
+
     })
     .controller('ScheduleCtrl', function ($scope) {
         console.log('ScheduleCtrl');
@@ -70,95 +103,67 @@ angular.module('DCUFMApp', ['ionic'])
     })
     .controller('ScheduleDayCtrl', function ($scope, $stateParams) {
         $scope.day = $stateParams.day.charAt(0).toUpperCase() + $stateParams.day.substring(1).toLowerCase();
-        $scope.headerTitle = $scope.day
+        $scope.headerTitle = $scope.day;
         $scope.schedule = JSON.parse(storage.getItem('schedule'))[$scope.day];
-        console.log($scope.schedule)
+        console.log($scope.schedule);
     })
     .controller('MessageCtrl', function ($scope) {
         console.log('MessageCtrl');
 
-        $scope.sendMessage = function() {
+        $scope.sendMessage = function () {
             console.log("sending message");
         }
     })
-    .controller('AboutCtrl', function ($scope) {
+    .controller('AboutCtrl', function () {
         console.log('AboutCtrl');
     })
-    .controller('ListenCtrl', function ($scope) {
-        console.log('ListenCtrl');
-
-        var streamUrl = "http://dcufm.redbrick.dcu.ie/stream128.mp3"
-        var streamAudio = new Audio(streamUrl);
-        $scope.isPlaying = false;
-
-        $scope.changeState = function() {
-            if($scope.isPlaying) {
-                stop();
-            } else {
-                play();
+    .controller('ListenCtrl', function ($scope, $rootScope) {
+        $scope.playpause = function () {
+            if (!$rootScope.ready) {
+                alert("Connection issue to stream. Try again in a few seconds.");
+                return;
             }
-        }
+            if ($rootScope.audio.paused) {
+                $rootScope.audio.play();
+            } else {
+                $rootScope.audio.pause();
+            }
+        };
 
-        var play = function() {
-            streamAudio.play();
-            $scope.isPlaying = true;
+        console.log($rootScope.audio)
 
-            streamAudio.addEventListener("error", function() {
-                console.log('streamAudio ERROR');
-            }, false);
-            streamAudio.addEventListener("canplay", function() {
-                console.log('streamAudio CAN PLAY');
-            }, false);
-            streamAudio.addEventListener("waiting", function() {
-                //console.log('streamAudio WAITING');
-                $scope.isPlaying = false;
-            }, false);
-            streamAudio.addEventListener("playing", function() {
-                $scope.isPlaying = true;
-            }, false);
-            streamAudio.addEventListener("ended", function() {
-                console.log('Streaming failed. Possibly due to a network error.');
-            }, false);
-        }
-
-        var stop = function() {
-            streamAudio.pause();
-            $scope.isPlaying = false;
-        }
-
-        var getTime = function() {
+        var getTime = function () {
             var date = new Date();
             var hours = date.getHours();
             var ampm = hours >= 12 ? 'pm' : 'am';
             hours = hours % 12;
             hours = hours ? hours : 12;
-            var strTime = hours + ':' + '00' + ' ' + ampm;
-            return strTime;
-        }
+            return hours + ':' + '00' + ' ' + ampm;
+        };
 
-        var getDay = function() {
+        var getDay = function () {
             var date = new Date();
             var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday',
                 'Friday', 'Saturday'];
             return days[date.getDay()];
-        }
+        };
 
-        var findShow = function(day, time) {
-            console.log(day, time);
-            shows = JSON.parse(storage.getItem('schedule'))[day];
-            for(var show in shows) {
-                if(show.startTime.equals(time)) {
-                    return currentShow;
+        var findShow = function (day, currentTime) {
+            var shows = JSON.parse(storage.getItem('schedule'))[day];
+            for (var showIndex in shows) {
+                var showTime = shows[showIndex].startClock;
+                if (showTime == currentTime) {
+                    return shows[showIndex];
                 }
             }
             return {
                 showName: "DCUFM Music Playlist",
                 imageURL: 'http://dcufm.com/wp-content/uploads/2013/10/dcufm-400x4001.jpg'
             }
-        }
+        };
 
         $scope.currentShow = findShow(getDay(), getTime());
         console.log($scope.currentShow);
-    })
+    });
 
 
