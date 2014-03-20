@@ -22,6 +22,12 @@ header .title {
   border: none !important;
 }
 
+img {
+    height: auto;
+    max-width: 100%;
+    width: auto;
+}
+
 .pane {
     background: url(../img/bg.png) no-repeat center center fixed;
     -webkit-background-size: cover;
@@ -84,11 +90,8 @@ a.item {
 }
 
 #show-image img {
-    display: block;
-    max-width: 100%;
-    height: auto;
     z-index: -2;
-    position: relative;;
+    position: relative;
 }
 
 #show-play {

@@ -21,11 +21,63 @@
 
 <script id="home.html" type="text/ng-template">
     <ion-view title="'Home'">
-        <ion-content has-header="true" has-bouncing="false" padding="true">
-            <a class="item no-border" href="#/schedule">schedule</a>
-            <a class="item no-border" href="#/listen">listen</a>
-            <a class="item no-border" href="#/message">message</a>
-            <a class="item no-border" href="#/about">about</a>
+        <ion-content has-header="true" has-bouncing="false" padding="true"
+                     scroll="false">
+            <div class="center">
+                <img rwdimgmap name="menu-image" src="img/menu.png"
+                     width="627" height="626" id="menu-image" usemap="#menu"
+                     alt="Menu" hidefocus="false"/>
+
+                <map name="menu" id="menu">
+
+                    <area shape="poly"
+                          coords="349,423,349,615,280,615,280,423,349,423"
+                          href="#/about" title="About" alt="About"/>
+
+                    <area shape="poly"
+                          coords="351,11,351,204,279,204,279,11,351,11"
+                          href="#/listen" title="Listen In"
+                          alt="Listen In"/>
+
+                    <area shape="poly"
+                          coords="615,280,615,351,423,351,423,280,615,280"
+                          href="#/schedule" title="Schedule"
+                          alt="Schedule"/>
+
+                    <area shape="poly"
+                          coords="205,281,205,350,11,350,11,281,205,281"
+                          href="#/message" title="Message In"
+                          alt="Message In"/>
+
+                    <area shape="poly"
+                          coords="404,313,402,331,396,348,388,364,376,377,363,388,347,396,330,402,313,404,294,402,277,396,262,388,248,376,238,363,229,347,224,330,223,313,224,294,230,277,238,262,249,248,262,238,278,229,295,224,313,223,331,224,348,230,364,238,377,249,388,262,396,278,402,295,404,313,404,313"
+                          href="#/listen" title="Listen" alt="Listen"/>
+
+                    <area shape="poly"
+                          coords="131,351,205,351,208,361,215,373,233,394,256,412,268,418,279,422,279,615,274,615,245,609,215,600,184,588,153,571,123,551,96,526,70,498,49,465,33,433,21,400,11,351,90,351,101,340,109,333,120,342,131,351,131,351"
+                          href="#/message" title="Message In"
+                          alt="Message In"/>
+
+                    <area shape="poly"
+                          coords="615,351,606,393,599,412,592,433,582,453,569,475,552,498,532,521,510,542,488,560,465,576,444,587,418,598,393,606,350,615,350,537,340,527,335,519,341,512,351,503,351,421,360,417,371,410,392,393,410,372,417,361,421,351,615,351,615,351"
+                          href="#/about" title="About" alt="About"/>
+
+                    <area shape="poly"
+                          coords="380,16,405,22,432,33,459,47,487,64,514,85,538,108,560,135,578,165,586,181,594,198,606,234,615,275,615,280,543,280,524,293,514,286,504,280,423,280,419,269,413,257,395,234,372,215,361,208,350,204,350,11,380,16,380,16"
+                          href="#/schedule" title="Schedule"
+                          alt="Schedule"/>
+
+                    <area shape="poly"
+                          coords="279,11,279,92,287,103,293,111,286,123,279,135,279,204,267,207,255,213,243,221,232,232,221,243,212,256,206,268,203,280,11,280,11,275,17,241,23,216,34,189,48,162,65,135,86,110,109,86,135,65,163,48,198,31,226,21,274,11,279,11,279,11"
+                          href="#/listen" title="Listen" alt="Listen"/>
+                </map>
+            </div>
+            <!--
+                <a class="item no-border" href="#/schedule">schedule</a>
+                <a class="item no-border" href="#/listen">listen</a>
+                <a class="item no-border" href="#/message">message</a>
+                <a class="item no-border" href="#/about">about</a>
+            -->
         </ion-content>
     </ion-view>
 </script>
@@ -47,7 +99,8 @@
     <ion-view title="day">
         <ion-content has-header="true" has-bouncing="false" padding="true">
             <div class="list">
-                <div class="item item-text-wrap no-border" ng-repeat="show in schedule">
+                <div class="item item-text-wrap no-border"
+                     ng-repeat="show in schedule">
                     <div class="row row-center no-padding">
                         <div class="col-33"
                              ng-bind-html="show.startClock"></div>
@@ -79,20 +132,26 @@
     <ion-view title="'About Us'">
         <ion-content has-header="true" has-bouncing="false" padding="true">
             <div class="item item-text-wrap">
-                <p>DCUfm is Dublin City University’s award-winning home-grown radio
+                <p>DCUfm is Dublin City University’s award-winning home-grown
+                    radio
                     station, staffed by over 120 volunteers from across DCU’s
                     faculties. Our philosophy is simple: we want to put out the
-                    best, fun-loving programmes possible, and give students a voice.
+                    best, fun-loving programmes possible, and give students a
+                    voice.
 
                     We’re on the air 24 hours a day, with live and original
-                    programmes from 9am to 11pm on weekdays. DCUfm is your place for
+                    programmes from 9am to 11pm on weekdays. DCUfm is your place
+                    for
                     the best in student-orientated arts, news, sport, and music
                     radio. Whatever you’re into, we’ve something for you.</p>
 
                 <p>
-                    Many former staff members are moving up the ranks within local
-                    and national broadcasters – indeed, many of our current members
-                    now have jobs in the industry thanks to the experience they’ve
+                    Many former staff members are moving up the ranks within
+                    local
+                    and national broadcasters – indeed, many of our current
+                    members
+                    now have jobs in the industry thanks to the experience
+                    they’ve
                     gained here.
                 </p>
             </div>
@@ -102,7 +161,8 @@
 
 <script id="listen.html" type="text/ng-template">
     <ion-view title="'Listen'">
-        <div class="bar bar-subheader bar-dark gradient-reversed no-border" id="show-info">
+        <div class="bar bar-subheader bar-dark gradient-reversed no-border"
+             id="show-info">
             <h2 class="title title-left">{{currentShow.showName}}</h2>
         </div>
         <ion-content has-header="true" has-subheader="true" scroll="false"
@@ -113,9 +173,10 @@
                 </div>
             </div>
         </ion-content>
-        <ion-footer-bar type="bar-dark" class="gradient no-border no-padding" id="show-play" ng-click="playpause()">
+        <ion-footer-bar type="bar-dark" class="gradient no-border no-padding"
+                        id="show-play" ng-click="playpause()">
             <i id="player-status-icon" class="icon"
-                 ng-class="{'ion-ios7-play': audio.paused, 'ion-ios7-pause': !audio.paused}"></i>
+               ng-class="{'ion-ios7-play': audio.paused, 'ion-ios7-pause': !audio.paused}"></i>
         </ion-footer-bar>
     </ion-view>
 </script>
