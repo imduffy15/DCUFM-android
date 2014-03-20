@@ -33,9 +33,6 @@ header .title {
 .item {
     background: rgba(255, 255, 255, 0.56);
     margin-bottom: 10px;
-    -webkit-box-shadow: 0px 0px 50px 3px rgba(151, 57, 0, 0.13);
-    -moz-box-shadow: 0px 0px 50px 3px rgba(151, 57, 0, 0.13);
-    box-shadow: 0px 0px 50px 3px rgba(151, 57, 0, 0.13);
 }
 
 a.item {
