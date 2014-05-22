@@ -39,20 +39,30 @@ angular.module('DCUFMApp', ['ionic'])
         $urlRouterProvider.otherwise("/home");
 
     })
+    .run(function($ionicPlatform) {
+        $ionicPlatform.ready(function() {
+            if(window.StatusBar) {
+                // org.apache.cordova.statusbar required
+                StatusBar.styleDefault();
+            }
+            navigator.splashscreen.hide();
+        });
+    })
     .run(function ($http, $rootScope) {
         // Place schedule data into localstorage.
         var cached = storage.getItem('schedule-cached');
-        var api = 'feed.json';
+        var api = 'http://www.dcufm.com/wp-content/plugins/dcufm-schedule/crud.php';
 
         // Only update if older than 86400 seconds.
         if ((Math.round(new Date().getTime() / 1000) - cached) > 86400) {
             $http({
-                method: 'GET',
+                method: 'POST',
                 url: api,
                 data: 'crud-action=read',
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'}
             })
                 .success(function (data) {
+                    console.log(data);
                     storage.setItem('schedule', JSON.stringify(data));
                     storage.setItem('schedule-cached', (Math.round(new Date().getTime() / 1000)));
                 })
@@ -107,11 +117,22 @@ angular.module('DCUFMApp', ['ionic'])
         $scope.schedule = JSON.parse(storage.getItem('schedule'))[$scope.day];
         console.log($scope.schedule);
     })
-    .controller('MessageCtrl', function ($scope) {
-        console.log('MessageCtrl');
+    .controller('MessageCtrl', function ($scope, $http) {
 
-        $scope.sendMessage = function () {
-            console.log("sending message");
+        $scope.sendMessage = function (message) {
+            console.log(message);
+            $http({
+                method: 'POST',
+                url: 'http://dcufm.com',
+                data: '_wpcf7=4974&_wpcf7_version=3.5.3&_wpcf7_locale=en_US&_wpcf7_unit_tag=wpcf7-f4974-w1-o1&_wpnonce=dc6e735fc0&_wpcf7_is_ajax_call=1&your-message=' + message,
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            })
+                .success(function (data) {
+                    alert("Your message was successfully sent");
+                })
+                .error(function (data) {
+                    alert("Your message could not be processed at this time");
+                })
         }
     })
     .controller('AboutCtrl', function () {

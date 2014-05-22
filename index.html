@@ -117,11 +117,11 @@
         <ion-content has-header="true" padding="true" has-bouncing="false">
             <div class="list list-inset">
                 <label class="item item-input no-border">
-                    <textarea placeholder="Enter your message here"></textarea>
+                    <textarea ng-model="message" placeholder="Enter your message here"></textarea>
                 </label>
             </div>
             <button class="button button-block button-balanced"
-                    ng-click="sendMessage()">
+                    ng-click="sendMessage(message)">
                 Submit
             </button>
         </ion-content>
